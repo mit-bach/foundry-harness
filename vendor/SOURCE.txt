@@ -1,0 +1,9 @@
+vendor/agent-room.ts is a verbatim copy of
+
+  https://github.com/Timur00Kh/pi-agents-talk-to-each-other/blob/e4f162a/extensions/agent-room/index.ts
+
+commit e4f162a ("Add cmux integration section to README and update limitations")
+
+License: vendor/AGENT-ROOM-LICENSE (MIT, Copyright (c) 2026 Timur00Kh)
+
+messenger-swarm is not vendored and is not used.

@@ -1,0 +1,62 @@
+{
+  "name": "foundry-harness",
+  "version": "0.1.0",
+  "description": "GrokBot-class control plane as a Pi package: Foundry roster, nicobailon/pi-subagents, Timur00Kh agent-room, @narumitw/pi-usage, routines, memory, approvals.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-coding-agent",
+    "foundry",
+    "grokbot",
+    "multi-agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mit-bach/foundry-harness.git"
+  },
+  "homepage": "https://github.com/mit-bach/foundry-harness#readme",
+  "bugs": {
+    "url": "https://github.com/mit-bach/foundry-harness/issues"
+  },
+  "files": [
+    "extensions",
+    "skills",
+    "foundry-output",
+    "vendor",
+    "AGENTS.md",
+    "SOURCE.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/foundry-roster.ts",
+      "./extensions/foundry-comms.ts",
+      "./extensions/foundry-subagents.ts",
+      "./extensions/foundry-memory.ts",
+      "./extensions/foundry-routines.ts",
+      "./extensions/foundry-approvals.ts",
+      "./node_modules/@narumitw/pi-usage/dist/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "dependencies": {
+    "pi-subagents": "^0.69.0",
+    "@narumitw/pi-usage": "^0.60.8"
+  },
+  "bundledDependencies": [
+    "pi-subagents",
+    "@narumitw/pi-usage"
+  ],
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  }
+}
