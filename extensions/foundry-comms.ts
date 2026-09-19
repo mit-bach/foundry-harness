@@ -2,7 +2,7 @@
  * foundry-comms — WRITE, self-contained
  *
  * Loads the real Timur00Kh/pi-agents-talk-to-each-other room bus
- * (vendor/agent-room.ts, verbatim at commit e4f162a), then adds the
+ * (npm git dependency pinned to commit e4f162a), then adds the
  * GrokBot handle layer: accept before run, ack ≠ complete, user supersede,
  * peer queue.
  *
@@ -10,11 +10,12 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { createRequire } from "node:module";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { randomUUID } from "node:crypto";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { getAgentDir } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import agentRoom from "../vendor/agent-room.ts";
 import { loadManifest, resolveBot } from "./lib/manifest.ts";
 
 type HandleStatus = "accepted" | "queued" | "running" | "completed" | "failed" | "cancelled";
@@ -30,6 +31,35 @@ type Handle = {
   result?: string;
   note?: string;
 };
+
+type AgentRoomFactory = (pi: ExtensionAPI) => void | Promise<void>;
+
+function resolveAgentRoomPath(): string {
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  const require = createRequire(import.meta.url);
+  const candidates: string[] = [];
+  try {
+    const pkg = path.dirname(require.resolve("pi-agents-talk-to-each-other/package.json"));
+    candidates.push(path.join(pkg, "extensions/agent-room/index.ts"));
+  } catch {
+    /* package not resolved yet */
+  }
+  candidates.push(path.join(here, "../vendor/agent-room.ts"));
+  for (const file of candidates) {
+    if (fs.existsSync(file)) return file;
+  }
+  throw new Error(
+    "agent-room missing. Install github:Timur00Kh/pi-agents-talk-to-each-other#e4f162a (see SOURCE.md).",
+  );
+}
+
+async function loadAgentRoom(): Promise<AgentRoomFactory> {
+  const mod = (await import(pathToFileURL(resolveAgentRoomPath()).href)) as { default?: AgentRoomFactory };
+  if (typeof mod.default !== "function") {
+    throw new Error("agent-room module has no default export");
+  }
+  return mod.default;
+}
 
 function handlesDir() {
   const dir = path.join(getAgentDir(), "foundry", "handles");
@@ -79,8 +109,9 @@ function spawnViaSubagents(
   });
 }
 
-export default function foundryComms(pi: ExtensionAPI) {
-  agentRoom(pi);
+export default async function foundryComms(pi: ExtensionAPI) {
+  const agentRoom = await loadAgentRoom();
+  await agentRoom(pi);
 
   pi.registerTool({
     name: "bot_send_prompt",

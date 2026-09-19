@@ -46,11 +46,13 @@
   },
   "dependencies": {
     "pi-subagents": "^0.69.0",
-    "@narumitw/pi-usage": "^0.60.8"
+    "@narumitw/pi-usage": "^0.60.8",
+    "pi-agents-talk-to-each-other": "github:Timur00Kh/pi-agents-talk-to-each-other#e4f162a"
   },
   "bundledDependencies": [
     "pi-subagents",
-    "@narumitw/pi-usage"
+    "@narumitw/pi-usage",
+    "pi-agents-talk-to-each-other"
   ],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
